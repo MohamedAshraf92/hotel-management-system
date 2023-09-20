@@ -6,6 +6,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RoomModule } from './room/room.module';
+import { RoleModule } from './role/role.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { RoomModule } from './room/room.module';
     }),
     HotelModule,
     RoomModule,
+    RoleModule,
   ],
   controllers: [AppController],
   providers: [AppService],

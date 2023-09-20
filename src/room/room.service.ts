@@ -10,6 +10,23 @@ export class RoomService {
     @InjectRepository(Room) private roomRepository: Repository<Room>,
   ) {}
 
+  async getHotelRooms(hotelId: string): Promise<Room[]> {
+    console.log({ hotelId });
+    const rooms = await this.roomRepository.find({
+      relations: ['hotel'],
+      where: { hotel: hotelId },
+    });
+    // const rooms = await this.roomRepository.find({
+    //   where: { type: 'Double', hotel: hotelId },
+    // });
+    return rooms;
+  }
+
+  async getRoomById(id: string): Promise<Room> {
+    const room = await this.roomRepository.findOneBy({ id });
+    return room;
+  }
+
   async createRoom(createRoomData: createRoomInput): Promise<Room> {
     const createdRoom = await this.roomRepository.create(createRoomData);
     await this.roomRepository.save(createdRoom);
