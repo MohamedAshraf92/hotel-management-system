@@ -11,14 +11,12 @@ export class RoomService {
   ) {}
 
   async getHotelRooms(hotelId: string): Promise<Room[]> {
-    console.log({ hotelId });
-    const rooms = await this.roomRepository.find({
-      relations: ['hotel'],
-      where: { hotel: hotelId },
-    });
-    // const rooms = await this.roomRepository.find({
-    //   where: { type: 'Double', hotel: hotelId },
-    // });
+    const rooms = await this.roomRepository
+      .createQueryBuilder('room')
+      .where({ hotel: hotelId })
+      .leftJoinAndSelect('room.hotel', 'hotel')
+      .getMany();
+
     return rooms;
   }
 

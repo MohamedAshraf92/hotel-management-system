@@ -7,6 +7,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RoomModule } from './room/room.module';
 import { RoleModule } from './role/role.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { RoleModule } from './role/role.module';
     HotelModule,
     RoomModule,
     RoleModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],

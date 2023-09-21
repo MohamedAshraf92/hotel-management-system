@@ -1,15 +1,21 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { RoomService } from './room.service';
 import { Room } from './room.entity';
 import { createRoomInput } from './room.types';
-import { Inject } from '@nestjs/common';
 import { HotelService } from '../hotel/hotel.service';
 
-@Resolver()
+@Resolver(() => Room)
 export class RoomResolver {
   constructor(
-    @Inject(RoomService) private roomService: RoomService,
-    @Inject(HotelService) private hotelService: HotelService,
+    private roomService: RoomService,
+    private hotelService: HotelService,
   ) {}
 
   @Query(() => [Room])
@@ -25,5 +31,10 @@ export class RoomResolver {
   @Mutation(() => Room)
   createRoom(@Args('createRoomData') createRoomData: createRoomInput) {
     return this.roomService.createRoom(createRoomData);
+  }
+
+  @ResolveField('hotel')
+  async hotel(@Parent() room: Room) {
+    return this.hotelService.getHotelById(room.hotel);
   }
 }

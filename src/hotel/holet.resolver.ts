@@ -2,11 +2,10 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CreateHotelInput, UpdateHotelInput } from './hotel.types';
 import { HotelService } from './hotel.service';
 import { Hotel } from './hotel.entity';
-import { Inject } from '@nestjs/common';
 
 @Resolver()
 export class HotelResolver {
-  constructor(@Inject(HotelService) private hotelService: HotelService) {}
+  constructor(private hotelService: HotelService) {}
 
   @Query(() => [Hotel])
   getAllHotels(): Promise<Hotel[]> {

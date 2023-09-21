@@ -1,11 +1,5 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Hotel } from '../hotel/hotel.entity';
 
 @Entity()
@@ -37,6 +31,5 @@ export class Room {
 
   @Field(() => Hotel)
   @ManyToOne(() => Hotel, (hotel: Hotel) => hotel.id, { eager: true })
-  @JoinColumn()
   hotel: string;
 }

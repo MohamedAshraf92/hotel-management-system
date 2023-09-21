@@ -13,6 +13,10 @@ export class RoleService {
     return this.roleRepository.find();
   }
 
+  async getRoleById(id: string): Promise<Role> {
+    return this.roleRepository.findOneBy({ id });
+  }
+
   async createRole(name: string): Promise<Role> {
     const createdRole = await this.roleRepository.create({ name });
     await this.roleRepository.save(createdRole);
