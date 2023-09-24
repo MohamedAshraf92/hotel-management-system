@@ -4,9 +4,18 @@ import { UserService } from './user.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { RoleModule } from '../role/role.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User]), forwardRef(() => RoleModule)],
+  imports: [
+    TypeOrmModule.forFeature([User]),
+    forwardRef(() => RoleModule),
+    JwtModule.register({
+      global: true,
+      secret: 'this is top secret string',
+      signOptions: { expiresIn: '1d' },
+    }),
+  ],
   providers: [UserResolver, UserService],
   exports: [UserService, TypeOrmModule],
 })
