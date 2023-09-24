@@ -14,20 +14,22 @@ export class RoomService {
     const rooms = await this.roomRepository
       .createQueryBuilder('room')
       .where({ hotel: hotelId })
-      .leftJoinAndSelect('room.hotel', 'hotel')
+      // .leftJoinAndSelect('room.hotel', 'hotel')
       .getMany();
 
     return rooms;
   }
 
   async getRoomById(id: string): Promise<Room> {
-    const room = await this.roomRepository.findOneBy({ id });
+    const room = await this.roomRepository
+      .createQueryBuilder('room')
+      .where({ id })
+      .getOne();
     return room;
   }
 
   async createRoom(createRoomData: createRoomInput): Promise<Room> {
     const createdRoom = await this.roomRepository.create(createRoomData);
-    await this.roomRepository.save(createdRoom);
-    return createdRoom;
+    return await this.roomRepository.save(createdRoom);
   }
 }

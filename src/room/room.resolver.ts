@@ -33,8 +33,8 @@ export class RoomResolver {
     return this.roomService.createRoom(createRoomData);
   }
 
-  @ResolveField('hotel')
+  @ResolveField()
   async hotel(@Parent() room: Room) {
-    return this.hotelService.getHotelById(room.hotel);
+    return await this.hotelService.getHotelById(room.hotel);
   }
 }

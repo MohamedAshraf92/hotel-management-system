@@ -24,7 +24,6 @@ export class UserService {
       ...data,
       password: hashedPassword,
     });
-    await this.userRepository.save(createdUser);
-    return createdUser;
+    return await this.userRepository.save(createdUser);
   }
 }

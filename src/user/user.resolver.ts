@@ -26,6 +26,6 @@ export class UserResolver {
 
   @ResolveField('role')
   async role(@Parent() user: User) {
-    return this.roleService.getRoleById(user.role);
+    return await this.roleService.getRoleById(user.role);
   }
 }
