@@ -8,12 +8,23 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { RoomModule } from './room/room.module';
 import { RoleModule } from './role/role.module';
 import { UserModule } from './user/user.module';
+import { UserService } from './user/user.service';
 
 @Module({
   imports: [
-    GraphQLModule.forRoot<ApolloDriverConfig>({
-      autoSchemaFile: true,
+    GraphQLModule.forRootAsync<ApolloDriverConfig>({
       driver: ApolloDriver,
+      imports: [UserModule],
+      inject: [UserService],
+      useFactory: (userService: UserService) => ({
+        autoSchemaFile: true,
+        context: async ({ req }) => {
+          const accessToken =
+            req.headers.authorization?.replace('Bearer ', '') || '';
+          const user = await userService.validateUser(accessToken);
+          return { req, user };
+        },
+      }),
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',

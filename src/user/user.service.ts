@@ -29,6 +29,19 @@ export class UserService {
     return await this.userRepository.save(createdUser);
   }
 
+  async validateUser(accessToken: string): Promise<User> {
+    if (accessToken) {
+      const { id } = await this.jwtService.verify(accessToken);
+      const user = await this.userRepository
+        .createQueryBuilder('user')
+        .where({ id })
+        .leftJoinAndSelect('user.role', 'role')
+        .getOne();
+      return user;
+    }
+    return null;
+  }
+
   async signin(authCredentials: AuthCredentials): Promise<SignInResult> {
     const { email, password } = authCredentials;
     const user = await this.userRepository
@@ -36,7 +49,7 @@ export class UserService {
       .where({ email })
       .getOne();
     if (user && (await bcrypt.compare(password, user.password))) {
-      const payload = { email, id: user.id };
+      const payload = { id: user.id };
       const accessToken = await this.jwtService.sign(payload);
       return { accessToken, user };
     } else {
