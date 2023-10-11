@@ -1,6 +1,19 @@
-import { Field, InputType, ObjectType } from '@nestjs/graphql';
+import { Field, ID, InputType, ObjectType } from '@nestjs/graphql';
 import { IsEmail, IsNotEmpty, IsString, IsUUID, Length } from 'class-validator';
-import { User } from './user.entity';
+import { Role } from '../role/role.entity';
+
+@InputType()
+class RoleInput {
+  @Field()
+  @IsNotEmpty()
+  @IsString()
+  name: string;
+
+  @Field(() => ID)
+  @IsUUID()
+  @IsNotEmpty()
+  id: string;
+}
 
 @InputType()
 export class CreateUserInput {
@@ -30,9 +43,7 @@ export class CreateUserInput {
   adress: string;
 
   @Field()
-  @IsString()
-  @IsUUID()
-  role: string;
+  role: RoleInput;
 }
 
 @InputType()
@@ -44,7 +55,29 @@ export class AuthCredentials {
 
   @Field()
   @IsString()
+  @IsNotEmpty()
   password: string;
+}
+
+@ObjectType()
+export class SharedUser {
+  @Field(() => ID)
+  id: string;
+
+  @Field()
+  email: string;
+
+  @Field()
+  firstName: string;
+
+  @Field()
+  lastName: string;
+
+  @Field()
+  adress: string;
+
+  @Field(() => Role)
+  role: Role;
 }
 
 @ObjectType()
@@ -53,5 +86,5 @@ export class SignInResult {
   accessToken: string;
 
   @Field()
-  user: User;
+  user: SharedUser;
 }

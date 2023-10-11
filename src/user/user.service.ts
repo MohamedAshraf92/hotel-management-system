@@ -22,11 +22,11 @@ export class UserService {
   async createUser(createUserData: CreateUserInput): Promise<User> {
     const { password, ...data } = createUserData;
     const hashedPassword = await this.hashPassword(password);
-    const createdUser = await this.userRepository.create({
+    const newUser = await this.userRepository.create({
       ...data,
       password: hashedPassword,
     });
-    return await this.userRepository.save(createdUser);
+    return this.userRepository.save(newUser);
   }
 
   async validateUser(accessToken: string): Promise<User> {
@@ -47,10 +47,13 @@ export class UserService {
     const user = await this.userRepository
       .createQueryBuilder('user')
       .where({ email })
+      .leftJoinAndSelect('user.role', 'role')
       .getOne();
     if (user && (await bcrypt.compare(password, user.password))) {
       const payload = { id: user.id };
       const accessToken = await this.jwtService.sign(payload);
+      console.log(user);
+
       return { accessToken, user };
     } else {
       throw new UnauthorizedException('Username or Password incorrect!');
