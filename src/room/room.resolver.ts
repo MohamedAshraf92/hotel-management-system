@@ -10,6 +10,8 @@ import { RoomService } from './room.service';
 import { Room } from './room.entity';
 import { createRoomInput } from './room.types';
 import { HotelService } from '../hotel/hotel.service';
+import { UseGuards } from '@nestjs/common';
+import { AuthGuard } from '../user/authGuard';
 
 @Resolver(() => Room)
 export class RoomResolver {
@@ -28,6 +30,7 @@ export class RoomResolver {
     return this.roomService.getRoomById(id);
   }
 
+  @UseGuards(AuthGuard)
   @Mutation(() => Room)
   createRoom(@Args('createRoomData') createRoomData: createRoomInput) {
     return this.roomService.createRoom(createRoomData);

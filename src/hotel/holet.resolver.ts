@@ -14,12 +14,12 @@ export class HotelResolver {
     return this.hotelService.getAllHotels();
   }
 
-  @UseGuards(AuthGuard)
   @Query(() => Hotel)
   getHotelById(@Args('id') id: string): Promise<Hotel> {
     return this.hotelService.getHotelById(id);
   }
 
+  @UseGuards(AuthGuard)
   @Mutation(() => Hotel)
   createHotel(@Args('createHotelData') createHotelData: CreateHotelInput) {
     return this.hotelService.createHotel(createHotelData);

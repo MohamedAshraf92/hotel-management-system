@@ -12,8 +12,6 @@ export class HotelService {
 
   async getAllHotels(): Promise<Hotel[]> {
     const hotels = await this.hotelRepository.find();
-    console.log({ hotels: hotels });
-    console.log({ type: typeof hotels[0] });
     return hotels;
   }
 
