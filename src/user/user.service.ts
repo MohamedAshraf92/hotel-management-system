@@ -52,8 +52,6 @@ export class UserService {
     if (user && (await bcrypt.compare(password, user.password))) {
       const payload = { id: user.id };
       const accessToken = await this.jwtService.sign(payload);
-      console.log(user);
-
       return { accessToken, user };
     } else {
       throw new UnauthorizedException('Username or Password incorrect!');
