@@ -60,7 +60,7 @@ export class AuthCredentials {
 }
 
 @ObjectType()
-export class SharedUser {
+export class User {
   @Field(() => ID)
   id: string;
 
@@ -86,5 +86,5 @@ export class SignInResult {
   accessToken: string;
 
   @Field()
-  user: SharedUser;
+  user: User;
 }
