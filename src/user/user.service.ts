@@ -1,12 +1,16 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserEnity } from './user.entity';
+import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import {
   AuthCredentials,
   CreateUserInput,
+  CreateUserResult,
   SignInResult,
-  User,
 } from './user.types';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
@@ -14,7 +18,7 @@ import { JwtService } from '@nestjs/jwt';
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(UserEnity) private userRepository: Repository<UserEnity>,
+    @InjectRepository(User) private userRepository: Repository<User>,
     private jwtService: JwtService,
   ) {}
 
@@ -24,14 +28,19 @@ export class UserService {
     return hashedPassword;
   }
 
-  async createUser(createUserData: CreateUserInput): Promise<User> {
+  async createUser(createUserData: CreateUserInput): Promise<CreateUserResult> {
     const { password, ...data } = createUserData;
-    const hashedPassword = await this.hashPassword(password);
-    const newUser = await this.userRepository.create({
-      ...data,
-      password: hashedPassword,
-    });
-    return this.userRepository.save(newUser);
+    try {
+      const hashedPassword = await this.hashPassword(password);
+      const createdUser = this.userRepository.create({
+        ...data,
+        password: hashedPassword,
+      });
+      await this.userRepository.save(createdUser);
+      return { done: true, message: 'User created successfully' };
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
 
   async validateUser(accessToken: string): Promise<User> {
@@ -57,7 +66,9 @@ export class UserService {
     if (user && (await bcrypt.compare(password, user.password))) {
       const payload = { id: user.id };
       const accessToken = await this.jwtService.sign(payload);
-      return { accessToken, user };
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { password, ...userData } = user;
+      return { accessToken, user: userData };
     } else {
       throw new UnauthorizedException('Username or Password incorrect!');
     }

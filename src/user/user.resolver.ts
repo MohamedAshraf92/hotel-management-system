@@ -3,18 +3,18 @@ import { UserService } from './user.service';
 import {
   AuthCredentials,
   CreateUserInput,
+  CreateUserResult,
   SignInResult,
-  User,
 } from './user.types';
 
 @Resolver()
 export class UserResolver {
   constructor(private userService: UserService) {}
 
-  @Mutation(() => User)
+  @Mutation(() => CreateUserResult)
   createUser(
     @Args('createUserData') createUserData: CreateUserInput,
-  ): Promise<User> {
+  ): Promise<CreateUserResult> {
     return this.userService.createUser(createUserData);
   }
 

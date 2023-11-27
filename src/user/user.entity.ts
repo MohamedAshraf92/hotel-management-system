@@ -8,7 +8,7 @@ import {
 import { Role } from '../role/role.entity';
 
 @Entity()
-export class UserEnity {
+export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -29,5 +29,5 @@ export class UserEnity {
 
   @ManyToOne(() => Role, (role: Role) => role.id, { eager: true })
   @JoinColumn({ name: 'role', referencedColumnName: 'id' })
-  role: Role;
+  role: string;
 }

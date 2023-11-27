@@ -2,13 +2,13 @@ import { Module, forwardRef } from '@nestjs/common';
 import { UserResolver } from './user.resolver';
 import { UserService } from './user.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserEnity } from './user.entity';
+import { User } from './user.entity';
 import { RoleModule } from '../role/role.module';
 import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UserEnity]),
+    TypeOrmModule.forFeature([User]),
     forwardRef(() => RoleModule),
     JwtModule.register({
       global: true,
