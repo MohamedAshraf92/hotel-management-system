@@ -15,7 +15,7 @@ export class RoomService {
     const rooms = await this.roomRepository
       .createQueryBuilder('room')
       .where({ hotel: hotelId })
-      // .leftJoinAndSelect('room.hotel', 'hotel')
+      .leftJoinAndSelect('room.hotel', 'hotel')
       .getMany();
 
     return rooms;
