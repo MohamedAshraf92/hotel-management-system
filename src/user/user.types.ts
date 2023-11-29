@@ -75,12 +75,3 @@ export class SignInResult {
   @Field()
   user: SharedUser;
 }
-
-@ObjectType()
-export class CreateUserResult {
-  @Field()
-  done: boolean;
-
-  @Field()
-  message: string;
-}

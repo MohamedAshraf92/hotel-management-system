@@ -25,10 +25,6 @@ export class Room {
   @Column()
   class: string;
 
-  @Field()
-  @Column({ default: false })
-  booked: boolean;
-
   @Field(() => Hotel)
   @ManyToOne(() => Hotel, (hotel: Hotel) => hotel.id, { eager: true })
   hotel: string;

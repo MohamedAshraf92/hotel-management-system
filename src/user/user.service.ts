@@ -6,14 +6,10 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
-import {
-  AuthCredentials,
-  CreateUserInput,
-  CreateUserResult,
-  SignInResult,
-} from './user.types';
+import { AuthCredentials, CreateUserInput, SignInResult } from './user.types';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { DoneResponse } from '../common/common.types';
 
 @Injectable()
 export class UserService {
@@ -28,7 +24,7 @@ export class UserService {
     return hashedPassword;
   }
 
-  async createUser(createUserData: CreateUserInput): Promise<CreateUserResult> {
+  async createUser(createUserData: CreateUserInput): Promise<DoneResponse> {
     const { password, ...data } = createUserData;
     try {
       const hashedPassword = await this.hashPassword(password);

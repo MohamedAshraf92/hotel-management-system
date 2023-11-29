@@ -1,24 +1,14 @@
-import {
-  Args,
-  Mutation,
-  Parent,
-  Query,
-  ResolveField,
-  Resolver,
-} from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { RoomService } from './room.service';
 import { Room } from './room.entity';
 import { createRoomInput } from './room.types';
-import { HotelService } from '../hotel/hotel.service';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from '../user/authGuard';
+import { DoneResponse } from '../common/common.types';
 
 @Resolver(() => Room)
 export class RoomResolver {
-  constructor(
-    private roomService: RoomService,
-    private hotelService: HotelService,
-  ) {}
+  constructor(private roomService: RoomService) {}
 
   @Query(() => [Room])
   getHotelRooms(@Args('hotelId') hotelId: string): Promise<Room[]> {
@@ -31,13 +21,10 @@ export class RoomResolver {
   }
 
   @UseGuards(AuthGuard)
-  @Mutation(() => Room)
-  createRoom(@Args('createRoomData') createRoomData: createRoomInput) {
+  @Mutation(() => DoneResponse)
+  createRoom(
+    @Args('createRoomData') createRoomData: createRoomInput,
+  ): Promise<DoneResponse> {
     return this.roomService.createRoom(createRoomData);
-  }
-
-  @ResolveField()
-  async hotel(@Parent() room: Room) {
-    return await this.hotelService.getHotelById(room.hotel);
   }
 }

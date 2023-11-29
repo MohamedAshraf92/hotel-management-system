@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Room } from './room.entity';
 import { Repository } from 'typeorm';
 import { createRoomInput } from './room.types';
+import { DoneResponse } from '../common/common.types';
 
 @Injectable()
 export class RoomService {
@@ -28,8 +29,18 @@ export class RoomService {
     return room;
   }
 
-  async createRoom(createRoomData: createRoomInput): Promise<Room> {
+  async createRoom(createRoomData: createRoomInput): Promise<DoneResponse> {
+    const { hotel, number } = createRoomData;
+    const roomWithSameNumber = await this.roomRepository
+      .createQueryBuilder('room')
+      .where({ hotel, number })
+      .getOne();
+
+    if (roomWithSameNumber) {
+      throw new BadRequestException('A room with the same number exists');
+    }
     const createdRoom = await this.roomRepository.create(createRoomData);
-    return await this.roomRepository.save(createdRoom);
+    await this.roomRepository.save(createdRoom);
+    return { done: true, message: 'Room created successfully' };
   }
 }
