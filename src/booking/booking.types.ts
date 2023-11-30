@@ -17,5 +17,5 @@ export class BookRoomInput {
 
   @Field()
   @IsUUID()
-  guest: string;
+  user: string;
 }

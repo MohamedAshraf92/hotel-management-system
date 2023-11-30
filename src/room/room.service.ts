@@ -1,14 +1,16 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Room } from './room.entity';
-import { Repository } from 'typeorm';
-import { createRoomInput } from './room.types';
+import { In, LessThanOrEqual, MoreThanOrEqual, Not, Repository } from 'typeorm';
+import { AvailableRoomInput, CreateRoomInput } from './room.types';
 import { DoneResponse } from '../common/common.types';
+import { Booking } from '../booking/booking.entity';
 
 @Injectable()
 export class RoomService {
   constructor(
     @InjectRepository(Room) private roomRepository: Repository<Room>,
+    @InjectRepository(Booking) private bookingRepository: Repository<Booking>,
   ) {}
 
   async getHotelRooms(hotelId: string): Promise<Room[]> {
@@ -29,7 +31,7 @@ export class RoomService {
     return room;
   }
 
-  async createRoom(createRoomData: createRoomInput): Promise<DoneResponse> {
+  async createRoom(createRoomData: CreateRoomInput): Promise<DoneResponse> {
     const { hotel, number } = createRoomData;
     const roomWithSameNumber = await this.roomRepository
       .createQueryBuilder('room')
@@ -42,5 +44,28 @@ export class RoomService {
     const createdRoom = await this.roomRepository.create(createRoomData);
     await this.roomRepository.save(createdRoom);
     return { done: true, message: 'Room created successfully' };
+  }
+
+  async findAvailableRooms(
+    availableRoomData: AvailableRoomInput,
+  ): Promise<Room[]> {
+    const { startDate, endDate } = availableRoomData;
+    const bookings = await this.bookingRepository
+      .createQueryBuilder('booking')
+      .where({
+        startDate: MoreThanOrEqual(startDate),
+        endDate: LessThanOrEqual(endDate),
+      })
+      .leftJoinAndSelect('booking.room', 'room')
+      .getMany();
+    console.log(bookings);
+    const bookedRoomsIds = bookings.map((b) => (b.room as any).id);
+    console.log(bookedRoomsIds);
+    const availableRooms = await this.roomRepository
+      .createQueryBuilder('room')
+      .where({ id: Not(In(bookedRoomsIds)) })
+      .getMany();
+    console.log(availableRooms);
+    return availableRooms;
   }
 }

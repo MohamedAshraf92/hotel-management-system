@@ -26,18 +26,12 @@ export class Booking {
   endDate: Date;
 
   @Field(() => Room)
-  @ManyToOne(() => Room, (room: Room) => room.id, {
-    eager: true,
-    createForeignKeyConstraints: false,
-  })
+  @ManyToOne(() => Room, (room: Room) => room.id, { eager: true })
   @JoinColumn({ name: 'room', referencedColumnName: 'id' })
   room: string;
 
   @Field(() => SharedUser)
-  @ManyToOne(() => User, (user: User) => user.id, {
-    eager: true,
-    createForeignKeyConstraints: false,
-  })
-  @JoinColumn({ name: 'guest', referencedColumnName: 'id' })
-  guest: string;
+  @ManyToOne(() => User, (user: User) => user.id, { eager: true })
+  @JoinColumn({ name: 'user', referencedColumnName: 'id' })
+  user: string;
 }

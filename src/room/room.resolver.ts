@@ -1,7 +1,7 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { RoomService } from './room.service';
 import { Room } from './room.entity';
-import { createRoomInput } from './room.types';
+import { AvailableRoomInput, CreateRoomInput } from './room.types';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from '../user/authGuard';
 import { DoneResponse } from '../common/common.types';
@@ -20,10 +20,15 @@ export class RoomResolver {
     return this.roomService.getRoomById(id);
   }
 
+  @Query(() => [Room])
+  findAvailableRooms(@Args() availableRoomData: AvailableRoomInput) {
+    return this.roomService.findAvailableRooms(availableRoomData);
+  }
+
   @UseGuards(AuthGuard)
   @Mutation(() => DoneResponse)
   createRoom(
-    @Args('createRoomData') createRoomData: createRoomInput,
+    @Args('createRoomData') createRoomData: CreateRoomInput,
   ): Promise<DoneResponse> {
     return this.roomService.createRoom(createRoomData);
   }
