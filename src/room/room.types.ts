@@ -1,5 +1,5 @@
 import { ArgsType, Field, ID, InputType } from '@nestjs/graphql';
-import { IsDate, IsNotEmpty, IsUUID, Min } from 'class-validator';
+import { IsDate, IsNotEmpty, IsString, IsUUID, Min } from 'class-validator';
 
 @InputType()
 export class CreateRoomInput {
@@ -33,4 +33,12 @@ export class AvailableRoomInput {
   @Field()
   @IsDate()
   endDate: Date;
+
+  @Field()
+  @IsString()
+  town: string;
+
+  @Field()
+  @IsString()
+  roomType: string;
 }

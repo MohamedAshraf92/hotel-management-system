@@ -23,4 +23,8 @@ export class Hotel {
   @Column()
   @Field()
   address: string;
+
+  @Column()
+  @Field()
+  town: string;
 }

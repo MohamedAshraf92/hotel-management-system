@@ -19,6 +19,10 @@ export class CreateHotelInput {
   @IsNotEmpty()
   @Field()
   address: string;
+
+  @IsNotEmpty()
+  @Field()
+  town: string;
 }
 
 @InputType()

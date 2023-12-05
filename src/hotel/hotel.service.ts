@@ -27,12 +27,13 @@ export class HotelService {
   }
 
   async updateHotel(updatedHotelData: UpdateHotelInput): Promise<Hotel> {
-    const { id, name, address, stars, description } = updatedHotelData;
+    const { id, name, address, stars, description, town } = updatedHotelData;
     const updatedHotel = await this.getHotelById(id);
     updatedHotel.name = name;
     updatedHotel.address = address;
     updatedHotel.description = description;
     updatedHotel.stars = stars;
+    updatedHotel.town = town;
 
     await this.hotelRepository.save(updatedHotel);
     return updatedHotel;

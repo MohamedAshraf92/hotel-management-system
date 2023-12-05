@@ -49,7 +49,7 @@ export class RoomService {
   async findAvailableRooms(
     availableRoomData: AvailableRoomInput,
   ): Promise<Room[]> {
-    const { startDate, endDate } = availableRoomData;
+    const { startDate, endDate, town, roomType } = availableRoomData;
     const bookings = await this.bookingRepository
       .createQueryBuilder('booking')
       .where({
@@ -61,8 +61,10 @@ export class RoomService {
     const bookedRoomsIds = bookings.map((b) => (b.room as any).id);
     const availableRooms = await this.roomRepository
       .createQueryBuilder('room')
-      .where({ id: Not(In(bookedRoomsIds)) })
+      .where({ id: Not(In(bookedRoomsIds)), type: roomType })
       .leftJoinAndSelect('room.hotel', 'hotel')
+      //YOU CAN WRITE ALSO .andWhere('hotel.town LIKE :hotelTown', { hotelTown: town })
+      .andWhere({ hotel: { town } })
       .getMany();
     return availableRooms;
   }
