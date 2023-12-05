@@ -58,14 +58,12 @@ export class RoomService {
       })
       .leftJoinAndSelect('booking.room', 'room')
       .getMany();
-    console.log(bookings);
     const bookedRoomsIds = bookings.map((b) => (b.room as any).id);
-    console.log(bookedRoomsIds);
     const availableRooms = await this.roomRepository
       .createQueryBuilder('room')
       .where({ id: Not(In(bookedRoomsIds)) })
+      .leftJoinAndSelect('room.hotel', 'hotel')
       .getMany();
-    console.log(availableRooms);
     return availableRooms;
   }
 }
