@@ -19,6 +19,7 @@ const role_module_1 = require("./role/role.module");
 const user_module_1 = require("./user/user.module");
 const user_service_1 = require("./user/user.service");
 const booking_module_1 = require("./booking/booking.module");
+const microservices_1 = require("@nestjs/microservices");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -40,14 +41,27 @@ AppModule = __decorate([
             }),
             typeorm_1.TypeOrmModule.forRoot({
                 type: 'postgres',
-                host: 'localhost',
+                host: 'hotels-database',
                 port: 5432,
                 username: 'postgres',
                 password: 'postgres',
-                database: 'hotelManagementSystem',
+                database: 'postgres',
                 autoLoadEntities: true,
                 synchronize: true,
             }),
+            microservices_1.ClientsModule.register([
+                {
+                    name: 'MATH_SERVICE',
+                    transport: microservices_1.Transport.RMQ,
+                    options: {
+                        urls: ['amqp://localhost:5672'],
+                        queue: 'cats_queue',
+                        queueOptions: {
+                            durable: false,
+                        },
+                    },
+                },
+            ]),
             hotel_module_1.HotelModule,
             room_module_1.RoomModule,
             role_module_1.RoleModule,

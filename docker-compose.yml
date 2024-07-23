@@ -1,0 +1,84 @@
+services:
+  hotels-service:
+    build:
+      context: ./hotelsService
+      dockerfile: Dockerfile
+    container_name: hotels-service
+    environment:
+      - PORT=4000
+    ports:
+      - '4000:4000'
+    depends_on:
+      - hotels-database
+    volumes:
+      - ./hotelsService/src:/app/src
+
+  payment-service:
+    build:
+      context: ./paymentService
+      dockerfile: Dockerfile
+    container_name: payment-service
+    environment:
+      - PORT=4001
+    ports:
+      - '4001:4001'
+    depends_on:
+      - payment-database
+    volumes:
+      - ./paymentService/src:/app/src
+
+  hotels-database:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    container_name: hotels-database
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    ports:
+      - '5435:5432'
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  payment-database:
+    image: mongo
+    container_name: payment-database
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpassword
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
+  # pgadmin:
+  #   image: dpage/pgadmin4
+  #   restart: always
+  #   container_name: nest-pgadmin4
+  #   environment:
+  #     - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+  #     - PGADMIN_DEFAULT_PASSWORD=pgadmin4
+  #   ports:
+  #     - '5050:80'
+  #   depends_on:
+  #     - hotels-database
+
+volumes:
+  pgdata:
+  mongo-data:

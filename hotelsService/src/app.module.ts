@@ -10,6 +10,7 @@ import { RoleModule } from './role/role.module';
 import { UserModule } from './user/user.module';
 import { UserService } from './user/user.service';
 import { BookingModule } from './booking/booking.module';
+import { RabbitMQModule } from './rabbitmq/rabbitmq.module';
 
 @Module({
   imports: [
@@ -29,11 +30,11 @@ import { BookingModule } from './booking/booking.module';
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
+      host: 'hotels-database',
       port: 5432,
       username: 'postgres',
       password: 'postgres',
-      database: 'hotelManagementSystem',
+      database: 'postgres',
       autoLoadEntities: true,
       synchronize: true,
     }),
@@ -42,6 +43,7 @@ import { BookingModule } from './booking/booking.module';
     RoleModule,
     UserModule,
     BookingModule,
+    RabbitMQModule,
   ],
   controllers: [AppController],
   providers: [AppService],
