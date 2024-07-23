@@ -15,7 +15,6 @@ import { RabbitMQService } from './rabbitmq.service';
           queueOptions: {
             durable: false,
           },
-          prefetchCount: 1,
         },
       },
     ]),
