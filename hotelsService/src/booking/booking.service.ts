@@ -16,7 +16,7 @@ export class BookingService {
   async bookRoom(bookRoomData: BookRoomInput): Promise<DoneResponse> {
     const newBooking = await this.bookingRepository.create(bookRoomData);
     await this.bookingRepository.save(newBooking);
-    await this.rabbitMQService.publishMessage('new payment', {
+    await this.rabbitMQService.publishMessage('new_payment', {
       room: newBooking.room,
       user: newBooking.user,
       price: '200$',

@@ -11,9 +11,11 @@ import { RabbitMQService } from './rabbitmq.service';
         options: {
           urls: ['amqp://guest:guest@rabbitmq:5672'],
           queue: 'payments_queue',
+          noAck: true,
           queueOptions: {
             durable: false,
           },
+          prefetchCount: 1,
         },
       },
     ]),
