@@ -10,7 +10,7 @@ import { RoleModule } from './role/role.module';
 import { UserModule } from './user/user.module';
 import { UserService } from './user/user.service';
 import { BookingModule } from './booking/booking.module';
-import { RabbitMQModule } from './rabbitmq/rabbitmq.module';
+import { RabbitmqModule } from './rabbitmq/rabbitmq.module';
 
 @Module({
   imports: [
@@ -43,7 +43,7 @@ import { RabbitMQModule } from './rabbitmq/rabbitmq.module';
     RoleModule,
     UserModule,
     BookingModule,
-    RabbitMQModule,
+    RabbitmqModule,
   ],
   controllers: [AppController],
   providers: [AppService],

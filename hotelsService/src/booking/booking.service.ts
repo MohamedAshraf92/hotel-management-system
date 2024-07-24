@@ -4,13 +4,13 @@ import { Booking } from './booking.entity';
 import { Repository } from 'typeorm';
 import { BookRoomInput } from './booking.types';
 import { DoneResponse } from '../common/common.types';
-import { RabbitMQService } from '../rabbitmq/rabbitmq.service';
+import { RabbitmqService } from '../rabbitmq/rabbitmq.service';
 
 @Injectable()
 export class BookingService {
   constructor(
     @InjectRepository(Booking) private bookingRepository: Repository<Booking>,
-    private readonly rabbitMQService: RabbitMQService,
+    private readonly rabbitMQService: RabbitmqService,
   ) {}
 
   async bookRoom(bookRoomData: BookRoomInput): Promise<DoneResponse> {
