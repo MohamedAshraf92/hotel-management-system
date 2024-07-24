@@ -1,25 +1,21 @@
 import { Module } from '@nestjs/common';
-import { ClientsModule, Transport } from '@nestjs/microservices';
-import { RabbitMQService } from './rabbitmq.service';
+import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq';
+import { RabbitmqService } from './rabbitmq.service';
 
 @Module({
   imports: [
-    ClientsModule.register([
-      {
-        name: 'PAYMENT_SERVICE',
-        transport: Transport.RMQ,
-        options: {
-          urls: ['amqp://guest:guest@rabbitmq:5672'],
-          queue: 'payments_queue',
-          noAck: true,
-          queueOptions: {
-            durable: false,
-          },
+    RabbitMQModule.forRoot(RabbitMQModule, {
+      exchanges: [
+        {
+          name: 'PAYMENT_SERVICE',
+          type: 'topic',
         },
-      },
-    ]),
+      ],
+      uri: 'amqp://guest:guest@rabbitmq:5672',
+      // enableControllerDiscovery: true,
+    }),
   ],
-  providers: [RabbitMQService],
-  exports: [RabbitMQService],
+  providers: [RabbitmqService],
+  exports: [RabbitMQModule, RabbitmqService],
 })
-export class RabbitMQModule {}
+export class RabbitmqModule {}

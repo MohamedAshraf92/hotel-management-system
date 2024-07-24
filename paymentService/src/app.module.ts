@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { RabbitMQModule } from './rabbitmq/rabbitmq.module';
+import { RabbitmqModule } from './rabbitmq/rabbitmq.module';
 import { InvoiceModule } from './invoice/invoice.module';
 
 @Module({
@@ -10,7 +10,7 @@ import { InvoiceModule } from './invoice/invoice.module';
     MongooseModule.forRoot(
       'mongodb://root:rootpassword@payment-database:27017/?authSource=admin',
     ),
-    RabbitMQModule,
+    RabbitmqModule,
     InvoiceModule,
   ],
   controllers: [AppController],
